@@ -57,4 +57,7 @@ eclipse{
                 resource sourcePath: "${webAppDirName}", deployPath: "${webAppDirName}/WEB-INF/classes"
         }
     }
+    classpath {
+    	defaultOutputDir = file('WebContent/WEB-INF/classes')
+    }
 }

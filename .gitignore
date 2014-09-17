@@ -19,4 +19,5 @@ bin/
 .project
 .settings/
 .gradle/
+classes/
 WebContent/WEB-INF/classes/.gitignore
