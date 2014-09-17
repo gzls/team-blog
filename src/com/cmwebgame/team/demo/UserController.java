@@ -75,18 +75,4 @@ public class UserController {
 		User user = new User(-1, "", null);
 		return new TemplateRenderer("/user/edit.jsp","user",user);
 	}
-	
-	public static void main(String[] args) {
-		
-		List<String> a = new ArrayList<String>();
-		a.add("hello");
-		a.add("w");
-		
-		for (Iterator<String> it = a.iterator();it.hasNext();){
-			String s = it.next();
-			System.out.println(s);
-			a.remove(s);
-		}
-		System.out.println(a);
-	}
 }

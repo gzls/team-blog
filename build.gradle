@@ -53,8 +53,8 @@ eclipse{
             facet name: 'java', version: '1.6'
         }
         component{
-                //resource sourcePath: "build/classes", deployPath: "$webAppDirName/WEB-INF/classes"
-                resource sourcePath: "${webAppDirName}", deployPath: "${webAppDirName}/WEB-INF/classes"
+                /*resource sourcePath: "build/classes", deployPath: "$webAppDirName/WEB-INF/classes"*/
+                resource sourcePath: "${webAppDirName}", deployPath: "/"
         }
     }
     classpath {
