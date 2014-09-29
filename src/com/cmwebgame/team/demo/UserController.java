@@ -2,8 +2,6 @@ package com.cmwebgame.team.demo;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +14,7 @@ import com.cmwebgame.team.demo.util.DbUtils;
 
 public class UserController {
 	
-	@Mapping("/")
+	@Mapping("/user/")
 	public Renderer index() throws Exception{
 		List<User> users = DbUtils.queryForList("select id, name, createtime from user order by id desc");
 		return new TemplateRenderer("/user/index.jsp", "users", users);
@@ -32,7 +30,7 @@ public class UserController {
 	}
 	
 	/*
-	 * ¸üÐÂÓÃ»§½çÃæ
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	@Mapping("/user/update/$1")
 	public Renderer update(long id) throws Exception{
@@ -49,13 +47,13 @@ public class UserController {
 		long id = Long.parseLong(request.getParameter("id"));
 		String name = request.getParameter("name");
 		if (id == -1){
-			//ÐÂ½¨£º
+			//ï¿½Â½ï¿½ï¿½ï¿½
 			id = DbUtils.nextId() +1;
 			if (1 != DbUtils.executeUpdate("insert into user (id,name,createtime) values (?,?,?)", id,name,new Timestamp(System.currentTimeMillis()))){
 				throw new SQLException("Create user failed.");
 			}
 		}else{
-			//¸üÐÂ£º
+			//ï¿½ï¿½ï¿½Â£ï¿½
 			if (1 != DbUtils.executeUpdate("update user set name=? where id = ? ", name,id)){
 				throw new IllegalArgumentException("User not found with id: " + id);
 			}
@@ -75,4 +73,5 @@ public class UserController {
 		User user = new User(-1, "", null);
 		return new TemplateRenderer("/user/edit.jsp","user",user);
 	}
+	
 }
