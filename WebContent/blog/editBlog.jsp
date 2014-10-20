@@ -6,7 +6,7 @@
 <html lang="zh-cn">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>日志</title>
+<title>博客</title>
 <link rel="stylesheet" type="text/css" href="${ctx }/resources/boostrap/css/bootstrap.min.css" />
 <script type="text/javascript" src="${ctx }/resources/ckeditor/ckeditor.js"></script>
 <style type="text/css">

@@ -1,6 +1,6 @@
-drop database if exists teamblog;
-create  database teamblog;
-use teamblog;
+##drop database if exists teamblog;
+##create  database teamblog;
+##use teamblog;
 
 ##用戶信息表
 

@@ -23,10 +23,10 @@
 				<i class="glyphicon glyphicon-home"></i> 个人中心
 			</li>
 			<li  class="active">
-				<a  href="#"><i class="glyphicon glyphicon-wrench"></i> 日誌管理</a>
+				<a  href="#"><i class="glyphicon glyphicon-wrench"></i> 博客管理</a>
 			</li>
 			<li>
-				<a href="<c:url value='/blog/add' />"><i class="glyphicon glyphicon-floppy-disk"></i> 写日志</a>
+				<a href="<c:url value='/blog/add' />"><i class="glyphicon glyphicon-floppy-disk"></i> 写博客</a>
 			</li>
 			<!-- <li>
 				<a href="#">应用</a>
@@ -35,7 +35,7 @@
 				<i class="glyphicon glyphicon-cog"></i> 功能列表
 			</li>
 			<li>
-				<a href="#">资料</a>
+				<a href="${ctx }/set/photo"><i class="glyphicon glyphicon-picture"></i> 修改头像</a>
 			</li>
 			<li>
 				<a href="#">设置</a>
@@ -70,8 +70,8 @@
 		<c:if test="${empty blogs }">
 			<div class="jumbotron">
 			  <h2>Hello!</h2>
-			  <p>暫無日誌？點擊 <a href="<c:url value= '/blog/add' />">發日誌</a> 寫一篇屬於自己的日誌。</p>
-			  <p><a href="<c:url value= '/blog/add' />" class="btn btn-primary btn-lg" role="button">發日誌</a></p>
+			  <p>暫無博客？點擊 <a href="<c:url value= '/blog/add' />">發博客</a> 寫一篇屬於自己的博客。</p>
+			  <p><a href="<c:url value= '/blog/add' />" class="btn btn-primary btn-lg" role="button">發博客</a></p>
 			</div>
 		</c:if>
 		<%-- <c:if test="${not empty blogs }">

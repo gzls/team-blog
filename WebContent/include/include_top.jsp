@@ -21,16 +21,16 @@
         	<a href="#" class="dropdown-toggle" data-toggle="dropdown">${user.username }&nbsp;<b class="caret"></b></a>
         	<ul class="dropdown-menu">
         	   <li><a href="<c:url value='/u/${user.id }' />">我的博客</a></li>
-              <li><a href="<c:url value='/blog' />">日志管理</a></li>
+              <li><a href="<c:url value='/blog' />">博客管理</a></li>
               <li><a id="changePwd" href="javascript:;">修改密码</a></li>
                <li class="divider"></li>
-              <li><a href="<c:url value='/blog/add' />">写日志</a></li>
+              <li><a href="<c:url value='/blog/add' />">写博客</a></li>
               <li class="divider"></li>
               <li><a href="${pageContext.request.contextPath }/logout">退出</a></li>
            </ul>
         </li>
         <li><a href="<c:url value='/blog' />">個人中心</a></li>
-        <li><a href="<c:url value='/blog/add' />">写日志</a></li>
+        <li><a href="<c:url value='/blog/add' />">写博客</a></li>
         <!-- <li><a href="#">後台管理</a></li> -->
      </ul>
   	</c:if>

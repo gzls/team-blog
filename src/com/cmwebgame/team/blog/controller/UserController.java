@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.cmwebgame.core.ActionContext;
 import com.cmwebgame.core.Mapping;
+import com.cmwebgame.core.MultipartHttpServletRequest;
 import com.cmwebgame.core.renderer.Renderer;
 import com.cmwebgame.core.renderer.TemplateRenderer;
 import com.cmwebgame.team.blog.dao.impl.BlogDaoImpl;
@@ -188,5 +189,24 @@ public class UserController {
 		} catch (Exception e){
 			e.printStackTrace();
 		}
+	}
+
+	@Mapping("/set/photo")
+	public Renderer setPhoto(){
+		HttpServletRequest request = ActionContext.getActionContext().getHttpServletRequest();
+		User user = (User) request.getSession().getAttribute("user");
+		if (user == null) return new TemplateRenderer("/");
+		return new TemplateRenderer("/user/setPhoto.jsp");
+	}
+	
+	@Mapping("/set/photo/upload")
+	public void uploadPhoto() throws Exception{
+		HttpServletRequest request = ActionContext.getActionContext().getHttpServletRequest();
+		if (request instanceof MultipartHttpServletRequest){
+			MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+			String name = multipartRequest.getFileName("photoFile");
+			System.out.println("上传的图片名字 ： " + name);
+		}
+		throw new IOException("");
 	}
 }
