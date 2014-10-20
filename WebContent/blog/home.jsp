@@ -1,19 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<c:set var="ctx" value="${pageContext.request.contextPath }" />
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="zh-cn">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>個人中心</title>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/resources/boostrap/css/bootstrap.min.css" />
-<script type="text/javascript" src="${pageContext.request.contextPath }/js/jquery-1.8.2.js" ></script>
-<script type="text/javascript" src="${pageContext.request.contextPath }/resources/boostrap/js/bootstrap.min.js" ></script>
-<style type="text/css">
-.footer{
-	text-align: center;
-}
-</style>
+<link rel="stylesheet" type="text/css" href="${ctx }/resources/boostrap/css/bootstrap.min.css" />
 </head>
 <body>
 <!-- 导航栏 -->
@@ -21,24 +15,24 @@
 <div class="container">
 <div class="row">
 	<div class="page-header">
-	  <h1>Example page header <small>Subtext for header</small></h1>
+	  <h2>${user.username }的博客 </h2>
 	</div>
 	<div class="col-md-3">
 		<ul class="nav nav-pills nav-stacked well">
 			<li class="nav-header">
 				<i class="glyphicon glyphicon-home"></i> 个人中心
 			</li>
-			<li>
-				<a href="#"><i class="glyphicon glyphicon-wrench"></i> 日誌管理</a>
+			<li  class="active">
+				<a  href="#"><i class="glyphicon glyphicon-wrench"></i> 日誌管理</a>
 			</li>
 			<li>
 				<a href="<c:url value='/blog/add' />"><i class="glyphicon glyphicon-floppy-disk"></i> 写日志</a>
 			</li>
-			<li>
+			<!-- <li>
 				<a href="#">应用</a>
-			</li>
+			</li> -->
 			<li>
-				功能列表
+				<i class="glyphicon glyphicon-cog"></i> 功能列表
 			</li>
 			<li>
 				<a href="#">资料</a>
@@ -52,36 +46,35 @@
 	</div>
 	<div class="col-md-9">
 		<ol class="breadcrumb">
-		  <li><a href="#">Home</a></li>
-		  <li><a href="#">Library</a></li>
+		  <li><a href="${ctx }/blog">Home</a></li>
 		  <li class="active">Data</li>
 		</ol>
 		<c:forEach var="blog" items="${blogs }">
 			<div class="well">
 				<h1>
-					${blog.value.title }
+					${blog.title }
 				</h1>
 				<p>
-					${blog.value.contentText }
+					${blog.contentHtml }
 				</p>
 				<p style="font-size: 12px;">
-					<fmt:formatDate value="${blog.value.time }" pattern="yyyy-MM-dd HH:mm:ss"/>
+					<fmt:formatDate value="${blog.createDate }" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</p>
 				<p>
-					<a class="btn" href="<c:url value='/blog/show/${blog.value.id }' />">查看</a> | 
-					<a class="btn" href="#">編輯</a> | 
-					<a class="btn" href="<c:url value='/blog/delete/${blog.value.id }' />">刪除</a>
+					<a class="btn" href="${ctx }/blog/show/${blog.id }">查看</a> | 
+					<a class="btn" href="${ctx }/blog/edit/${blog.id }">編輯</a> | 
+					<a class="btn" id="deleteBtn" href="${ctx }/blog/delete/${blog.id }">刪除</a>
 				</p>
 			</div>
 		</c:forEach>
 		<c:if test="${empty blogs }">
 			<div class="jumbotron">
 			  <h2>Hello!</h2>
-			  <p>沒博客？快去<a href="<c:url value= '/blog/add' />">寫博客</a>吧</p>
-			  <p><a href="<c:url value= '/blog/add' />" class="btn btn-primary btn-lg" role="button">寫博客</a></p>
+			  <p>暫無日誌？點擊 <a href="<c:url value= '/blog/add' />">發日誌</a> 寫一篇屬於自己的日誌。</p>
+			  <p><a href="<c:url value= '/blog/add' />" class="btn btn-primary btn-lg" role="button">發日誌</a></p>
 			</div>
 		</c:if>
-		<c:if test="${not empty blogs }">
+		<%-- <c:if test="${not empty blogs }">
 			<ul class="pagination">
 			  <li class="disabled"><a href="#">&laquo;</a></li>
 			  <li class="active"><a href="#">1</a></li>
@@ -91,11 +84,20 @@
 			  <li><a href="#">5</a></li>
 			  <li><a href="#">&raquo;</a></li>
 			</ul>
-		</c:if>
+		</c:if> --%>
 	</div>
 </div>
 <!-- bottom -->
 <jsp:include page="/include/include_bottom.jsp"></jsp:include>
 </div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#deleteBtn").click(function(){
+			if (!confirm("删除将无法恢复，是否删除？")){
+				return false;
+			}
+		});
+	});
+</script>
 </body>
 </html>

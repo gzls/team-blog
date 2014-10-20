@@ -1,76 +1,109 @@
+<%@page import="com.cmwebgame.team.blog.entity.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%
+	User user = (User)request.getSession().getAttribute("user");
+	if (user != null){
+		response.sendRedirect(request.getContextPath()+"/blog/");
+	}
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="zh-cn">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Login</title>
+<title>登錄</title>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/resources/boostrap/css/bootstrap.min.css" />
 <script type="text/javascript" src="${pageContext.request.contextPath }/js/jquery-1.8.2.js" ></script>
 <script type="text/javascript" src="${pageContext.request.contextPath }/resources/boostrap/js/bootstrap.min.js" ></script>
+<script type="text/javascript" src="${pageContext.request.contextPath }/resources/boostrap/js/tooltip.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath }/resources/boostrap/js/popover.js"></script>
 <style type="text/css">
-	.log {
-	     position:absolute;  
-	     top:50%;            
-	     left:50%;
-	     margin:-100px 0 0 -150px;     
-	     z-index:99;                           
-     }
+	body {
+	  padding-top: 40px;
+	  padding-bottom: 40px;
+	  background-color: #eee;
+	}
+	
+	.form-signin {
+	  max-width: 330px;
+	  padding: 15px;
+	  margin: 0 auto;
+	}
+	.form-signin .form-signin-heading,
+	.form-signin .checkbox {
+	  margin-bottom: 10px;
+	}
+	.form-signin .checkbox {
+	  font-weight: normal;
+	}
+	.form-signin .form-control {
+	  position: relative;
+	  height: auto;
+	  -webkit-box-sizing: border-box;
+	     -moz-box-sizing: border-box;
+	          box-sizing: border-box;
+	  padding: 10px;
+	  font-size: 16px;
+	}
+	.form-signin .form-control:focus {
+	  z-index: 2;
+	}
+	.form-signin input[type="email"] {
+	  margin-bottom: -1px;
+	  border-bottom-right-radius: 0;
+	  border-bottom-left-radius: 0;
+	}
+	.form-signin input[type="password"] {
+	  margin-bottom: 10px;
+	  border-top-left-radius: 0;
+	  border-top-right-radius: 0;
+	}
 </style>
 </head>
-<body style="background-color: #EEEEEE;">
+<body>
  <div class="container">
-    <div class="panel panel-primary log" style="width: 300px;">
-    		<div class="panel-heading">
-      <h3 class="panel-title">登&nbsp;录</h3>
-   </div>
-   <div class="panel-body">
-   	<div id="alertInfo" style="display: none;" class="alert alert-warning">
-	   <strong>Warning!</strong>
-	   <i id="alertMsg"> </i>
-	</div>
- 	<form id="loginForm" action="<c:url value='/blog/login' />" method="post" name="loginForm" class="bs-example bs-example-form">
-	 <div class="input-group">
-         <span class="input-group-addon glyphicon glyphicon-user"></span>
-         <input type="text" name="username" id="username" class="form-control" placeholder="username">
-      </div>
-      <br/>
-      <div class="input-group">
-         <span class="input-group-addon glyphicon glyphicon-lock"></span>
-         <input type="password" name="password" id="password" class="form-control" placeholder="password">
-      </div>
-      <br/>
-      <div class="input-group">
-	      <button id="loginButton" type="button" class="btn btn-default">Sign in</button>
-	  </div>
+ 	<p class="text-right"><a href="${pageContext.request.contextPath }/register">Sign up</a></p>
+ 	<form id="loginForm" action="${pageContext.request.contextPath }/login" method="post" name="loginForm" class="form-signin" role="form">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <input type="text" name="username" id="username" class="form-control" placeholder="Username or Email" data-container="body" data-trigger="manual" data-toggle="popover" data-placement="right" data-content="" />
+        <input type="password" name="password" id="password" class="form-control" placeholder="Password" data-container="body" data-trigger="manual" data-toggle="popover" data-placement="right" data-content="" >
+        <!-- <div class="checkbox">
+          <label>
+            <input type="checkbox" value="remember-me"> Remember me
+          </label>
+        </div> -->
+        <button id="loginBtn" class="btn btn-lg btn-primary btn-block" type="button">Sign in</button>
 	  <br/>
+ 	</form>
 	  <c:if test="${not empty msg }">
 	  	<div class="alert alert-danger" role="alert">
 			<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 			<strong>Error!</strong> ${msg }
 		</div>
 	  </c:if>
- 	</form>
+ 	<!-- bottom -->
+<jsp:include page="/include/include_bottom.jsp"></jsp:include>
    </div>
-</div>
- </div>
 <script type="text/javascript">
 	$(document).ready(function(){
-		$("#loginButton").click(function(){
+		$("#loginBtn").click(function(){
 			var username = $.trim($("#username").val());
 			if (username == ''){
-				$("#alertInfo").show();
-				$("#alertMsg").text("请输入用户名");
+				 $("#username").attr("data-content","请输入用户名");
+				 $("#username").popover('show');
 				return;
+			}else{
+				$("#username").popover('hide');
 			}
 			var password = $.trim($("#password").val());
 			if (password == ''){
-				$("#alertInfo").show();
-				$("#alertMsg").text("请输入密码");
+				 $("#password").attr("data-content","请输入密码");
+				 $("#password").popover('show');
 				return;
+			}else{
+				$("#password").popover('hide');
 			}
 			//提交
-			$("#alertInfo").hide();
 			$("#loginForm").submit();
 		});
 	});

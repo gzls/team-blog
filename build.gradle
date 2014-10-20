@@ -16,6 +16,8 @@ sourceSets {
 		resources{
 			srcDir 'src'
 		}
+		output.resourcesDir = "build/resources"
+        output.classesDir = "build/classes"
 	}
 }
 

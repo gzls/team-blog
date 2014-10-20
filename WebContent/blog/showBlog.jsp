@@ -5,10 +5,8 @@
 <html lang="zh-cn">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>個人中心</title>
+<title>${blog.title } - ${owner.username }</title>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/resources/boostrap/css/bootstrap.min.css" />
-<script type="text/javascript" src="${pageContext.request.contextPath }/js/jquery-1.8.2.js" ></script>
-<script type="text/javascript" src="${pageContext.request.contextPath }/resources/boostrap/js/bootstrap.min.js" ></script>
 <style type="text/css">
 </style>
 </head>
@@ -17,60 +15,60 @@
 <jsp:include page="/include/include_top.jsp"></jsp:include>
 <div class="container">
 <div class="row">
-	<div class="page-header">
-	  <h1>Example page header <small>Subtext for header</small></h1>
-	</div>
-	<div class="col-md-3">
-		<ul class="nav nav-pills nav-stacked well">
-			<li class="nav-header">
-				<i class="glyphicon glyphicon-home"></i> 个人中心
-			</li>
-			<li class="active">
-				<a href="#"><i class="glyphicon glyphicon-wrench"></i> 博客管理</a>
-			</li>
-			<li>
-				<a href="<c:url value='/blog/add' />"><i class="glyphicon glyphicon-floppy-disk"></i> 写日志</a>
-			</li>
-			<li>
-				<a href="#">应用</a>
-			</li>
-			<li>
-				功能列表
-			</li>
-			<li>
-				<a href="#">资料</a>
-			</li>
-			<li>
-				<a href="#">设置</a>
-			</li>
-			<li class="divider">
-			</li>
-		</ul>
-	</div>
-	<div class="col-md-9">
+	<c:if test="${not empty owner}">
+		<div class="page-header">
+		  <h1>${owner.username }的博客 </h1>
+		  <span><a href="http://blog.cmwebgame.com/u/${owner.id }">http://blog.cmwebgame.com/u/${owner.id }</a></span>
+		</div>
+		<div class="col-md-2 well">
+			<a href="#" class="thumbnail">
+		      <img src="${pageContext.request.contextPath }/images/xiaoxin.jpg" alt="...">
+		    </a>
+		    <p class="text-center">${owner.username }</p>
+		    <!-- <p>Introduce</p> -->
+		    <p class="text-center"><fmt:formatDate value="${owner.createDate }" pattern="yyyy-MM-dd"></fmt:formatDate></p>
+		</div>
+	</c:if>
+	<div class="col-md-10">
+		<c:if test="${not empty owner }">
+			<div>
+				<ul class="nav nav-pills" role="tablist">
+				  <li role="presentation"><a href="${pageContext.request.contextPath }/u/${owner.id }">Home</a></li>
+				  <li role="presentation" class="active"><a href="#">Blog</a></li>
+				  <li role="presentation"><a href="#">Messages</a></li>
+				  <li role="presentation"><a href="#">About me</a></li>
+				</ul>
+			</div>
+		</c:if>
+		<hr style="height:1px;border:none;border-top:1px dashed #E7E7E7;"/>
 		<c:if test="${not empty msg  }">
 			<div class="alert alert-danger" role="alert">
 				<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 				<strong>Error!</strong> ${msg }
 			</div>
 		</c:if>
-		<ol class="breadcrumb">
-		  <li><a href="#">Home</a></li>
-		  <li><a href="#">Library</a></li>
-		  <li class="active">Show</li>
-		</ol>
 		<c:if test="${not empty blog}">
 			<div class="panel panel-default">
 				<div class="panel-body">
-					<p><b style="font-size: 30px;">${blog.title }</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><fmt:formatDate value="${blog.time }" pattern="yyyy-MM-dd HH:mm:ss"/></i></p>
+					<p><b style="font-size: 30px;">${blog.title }</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><fmt:formatDate value="${blog.createDate }" pattern="yyyy-MM-dd HH:mm:ss"/></i></p>
 				${blog.content }
 				<p style="font-size: 12px;">
-					
 				</p>
-				<p>
-					<a class="btn" href="#">編輯</a> | 
-					<a class="btn" href="<c:url value='/blog/delete/${blog.id }' />">刪除</a>
-				</p>
+				<c:if test="${isCurrent == true }">
+					<p>
+						<a class="btn" href="<c:url value='/blog/edit/${blog.id }' />">編輯</a> | 
+						<a class="btn" id="deleteBtn" href="<c:url value='/blog/delete/${blog.id }' />">刪除</a>
+					</p>
+					<script type="text/javascript">
+						$(document).ready(function(){
+							$("#deleteBtn").click(function(){
+								if (!confirm("删除将无法恢复，是否删除？")){
+									return false;
+								}
+							});
+						});
+					</script>
+				</c:if>
 				</div>
 			</div>
 		</c:if>

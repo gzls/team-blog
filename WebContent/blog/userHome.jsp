@@ -5,10 +5,8 @@
 <html lang="zh-cn">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>誰的博客 - 臉書博客</title>
+<title>${currentUser.username }的博客 - 臉書博客</title>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/resources/boostrap/css/bootstrap.min.css" />
-<script type="text/javascript" src="${pageContext.request.contextPath }/js/jquery-1.8.2.js" ></script>
-<script type="text/javascript" src="${pageContext.request.contextPath }/resources/boostrap/js/bootstrap.min.js" ></script>
 </head>
 <body>
 <!-- 导航栏 -->
@@ -16,41 +14,51 @@
 <div class="container">
 <div class="row">
 	<div class="page-header">
-	  <h1>Example page header <small>Subtext for header</small></h1>
+	  <h1>${currentUser.username }的博客 </h1>
+	  <span><a href="http://blog.cmwebgame.com/u/${currentUser.id }">http://blog.cmwebgame.com/u/${currentUser.id }</a></span>
 	</div>
 	<div class="col-md-2 well">
 		<a href="#" class="thumbnail">
 	      <img src="${pageContext.request.contextPath }/images/xiaoxin.jpg" alt="...">
 	    </a>
-	    <p>Your Name</p>
-	    <p>Introduce</p>
-	    <p>Join Time</p>
+	    <p class="text-center">${currentUser.username }</p>
+	    <!-- <p>Introduce</p> -->
+	    <p class="text-center"><fmt:formatDate value="${currentUser.createDate }" pattern="yyyy-MM-dd"/></p>
 	</div>
 	<div class="col-md-10">
 		<div>
 			<ul class="nav nav-pills" role="tablist">
-			  <li role="presentation" class="active"><a href="#">Home</a></li>
+			  <li role="presentation" class="active"><a href="${pageContext.request.contextPath }/u/${currentUser.id }">Home</a></li>
 			  <li role="presentation"><a href="#">Blog</a></li>
 			  <li role="presentation"><a href="#">Messages</a></li>
-			  <li role="presentation"><a href="#">Abouts me</a></li>
+			  <li role="presentation"><a href="#">About me</a></li>
 			</ul>
 		</div>
 		<hr style="height:1px;border:none;border-top:1px dashed #E7E7E7;"/>
-		<div class="well">
-			<h1>
-				Title
-			</h1>
-			<p>
-				Content
-			</p>
-			<p style="font-size: 12px;">
-				yyyy-MM-dd HH:mm:ss
-			</p>
-			<p>
-				<a class="btn" href="#">查看</a>
-			</p>
-		</div>
-		<ul class="pagination">
+		<c:forEach var="blog" items="${blogs }">
+			<div class="well">
+				<h1>
+					${blog.title }
+				</h1>
+				<p>
+					${blog.content }
+				</p>
+				<p style="font-size: 12px;">
+					<fmt:formatDate value="${blog.createDate }" pattern="yyyy-MM-dd HH:mm:ss"/>
+				</p>
+				<p>
+					<c:if test="${selfLogin == false }">
+						<a class="btn" href="${pageContext.request.contextPath }/blog/show/${blog.id }">查看</a>
+					</c:if>
+					<c:if test="${selfLogin == true }">
+						<a class="btn" href="${pageContext.request.contextPath }/blog/show/${blog.id }">查看</a> |
+						<a class="btn" href="${pageContext.request.contextPath }/blog/edit/${blog.id }">编辑</a> |
+						<a class="btn" href="${pageContext.request.contextPath }/blog/delete/${blog.id }">删除</a>
+					</c:if>
+				</p>
+			</div>
+		</c:forEach>
+		<!-- <ul class="pagination">
 		  <li class="disabled"><a href="#">&laquo;</a></li>
 		  <li class="active"><a href="#">1</a></li>
 		  <li><a href="#">2</a></li>
@@ -58,7 +66,7 @@
 		  <li><a href="#">4</a></li>
 		  <li><a href="#">5</a></li>
 		  <li><a href="#">&raquo;</a></li>
-		</ul>
+		</ul> -->
 	</div>
 </div>
 <!-- bottom -->

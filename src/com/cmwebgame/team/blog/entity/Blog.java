@@ -2,61 +2,72 @@ package com.cmwebgame.team.blog.entity;
 
 import java.sql.Timestamp;
 
+import com.cmwebgame.dao.IdEntity;
+
 /**
  * Blog類，暫用於測試
+ * 
  * @author YouAndMe
- *
+ * 
  */
-public class Blog {
-	
-	private long id;
+public class Blog extends IdEntity {
+
+	private static final long serialVersionUID = 1L;
 	private String title;
 	private String content;
-	private String contentText;
-	private Timestamp time;
-	
-	public Blog(){}
-	
-	public Blog(long id,String title,String content,String contentText,Timestamp time){
+	private String contentHtml;
+	private Timestamp createDate;
+	private long userId;
+
+	public Blog() {
+	}
+
+	public Blog(long id, String title, String content, String contentHtml,
+			Timestamp createDate) {
 		this.id = id;
 		this.title = title;
 		this.content = content;
-		this.contentText = contentText;
-		this.time = time;
+		this.contentHtml = contentHtml;
+		this.createDate = createDate;
 	}
-	
+
 	public String getTitle() {
 		return title;
 	}
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
 	public String getContent() {
 		return content;
 	}
+
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public Timestamp getTime() {
-		return time;
-	}
-	public void setTime(Timestamp time) {
-		this.time = time;
+
+	public Timestamp getCreateDate() {
+		return createDate;
 	}
 
-	public String getContentText() {
-		return contentText;
+	public void setCreateDate(Timestamp createDate) {
+		this.createDate = createDate;
 	}
 
-	public void setContentText(String contentText) {
-		this.contentText = contentText;
+	public String getContentHtml() {
+		return contentHtml;
 	}
 
-	public long getId() {
-		return id;
+	public void setContentHtml(String contentHtml) {
+		this.contentHtml = contentHtml;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 }

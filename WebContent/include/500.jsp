@@ -3,8 +3,10 @@
 <html lang="zh-cn">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>404</title>
+<title>500</title>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/resources/boostrap/css/bootstrap.min.css" />
+<script type="text/javascript" src="${pageContext.request.contextPath }/js/jquery-1.8.2.js" ></script>
+<script type="text/javascript" src="${pageContext.request.contextPath }/resources/boostrap/js/bootstrap.min.js" ></script>
 </head>
 <body>
 <!-- 导航栏 -->
@@ -15,13 +17,12 @@
 <h1 class="grey lighter smaller">
 	<span class="blue bigger-125">
 		<i class="icon-sitemap"></i>
-		404
+		505
 	</span>
-	Page Not Found
+	Something Went Wrong
 </h1>
-
 <hr>
-<h3 class="lighter smaller">We looked everywhere but we couldn't find it!</h3>
+<h3 class="lighter smaller">But we are working on it! </h3>
 	<hr>
 </div>
 </div>
