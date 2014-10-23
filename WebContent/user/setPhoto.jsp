@@ -15,7 +15,7 @@
 <div class="container">
 <div class="row">
 	<div class="page-header">
-	  <h2>${user.username }的博客 </h2>
+	  <h2>${user.loginName }的博客 </h2>
 	</div>
 	<div class="col-md-3">
 		<ul class="nav nav-pills nav-stacked well">

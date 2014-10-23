@@ -9,14 +9,14 @@ import java.sql.SQLException;
 public class JdbcUtil {
 
 	// 连接属性(测试机)
-//	private static final String DRIVERCLASS = "com.mysql.jdbc.Driver";
-//	private static final String URL = "jdbc:mysql://gamedb:3306/wlsg?useUnicode=true&characterEncoding=utf8&mysqlEncoding=utf8";
-//	private static final String USERNAME = "wilson";
-//	private static final String PASSWORD = "=-098][poi";
 	private static final String DRIVERCLASS = "com.mysql.jdbc.Driver";
-	private static final String URL = "jdbc:mysql://localhost:3306/teamblog?useUnicode=true&characterEncoding=utf8&mysqlEncoding=utf8";
-	private static final String USERNAME = "root";
-	private static final String PASSWORD = "root";
+	private static final String URL = "jdbc:mysql://gamedb:3306/blog?useUnicode=true&characterEncoding=utf8&mysqlEncoding=utf8&zeroDateTimeBehavior=convertToNull";
+	private static final String USERNAME = "wilson";
+	private static final String PASSWORD = "=-098][poi";
+//	private static final String DRIVERCLASS = "com.mysql.jdbc.Driver";
+//	private static final String URL = "jdbc:mysql://localhost:3306/teamblog?useUnicode=true&characterEncoding=utf8&mysqlEncoding=utf8&zeroDateTimeBehavior=convertToNull";
+//	private static final String USERNAME = "root";
+//	private static final String PASSWORD = "root";
 
 	public static Connection getConnection() {
 		//

@@ -5,7 +5,7 @@
 <html lang="zh-cn">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>${blog.title } - ${owner.username }</title>
+<title>${blog.title } - ${owner.loginName }</title>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/resources/boostrap/css/bootstrap.min.css" />
 <style type="text/css">
 </style>
@@ -17,23 +17,23 @@
 <div class="row">
 	<c:if test="${not empty owner}">
 		<div class="page-header">
-		  <h1>${owner.username }的博客 </h1>
-		  <span><a href="http://blog.cmwebgame.com/u/${owner.id }">http://blog.cmwebgame.com/u/${owner.id }</a></span>
+		  <h1>${owner.loginName }的博客 </h1>
+		  <span><a href="http://blog.cmwebgame.com/u/${owner.loginName }">http://blog.cmwebgame.com/u/${owner.loginName }</a></span>
 		</div>
 		<div class="col-md-2 well">
 			<a href="#" class="thumbnail">
 		      <img src="${pageContext.request.contextPath }/images/xiaoxin.jpg" alt="...">
 		    </a>
-		    <p class="text-center">${owner.username }</p>
+		    <p class="text-center">${owner.loginName }</p>
 		    <!-- <p>Introduce</p> -->
-		    <p class="text-center"><fmt:formatDate value="${owner.createDate }" pattern="yyyy-MM-dd"></fmt:formatDate></p>
+		    <p class="text-center"><fmt:formatDate value="${owner.createTime }" pattern="yyyy-MM-dd"></fmt:formatDate></p>
 		</div>
 	</c:if>
 	<div class="col-md-10">
 		<c:if test="${not empty owner }">
 			<div>
 				<ul class="nav nav-pills" role="tablist">
-				  <li role="presentation"><a href="${pageContext.request.contextPath }/u/${owner.id }">Home</a></li>
+				  <li role="presentation"><a href="${pageContext.request.contextPath }/u/${owner.loginName }">Home</a></li>
 				  <li role="presentation" class="active"><a href="#">Blog</a></li>
 				  <li role="presentation"><a href="#">Messages</a></li>
 				  <li role="presentation"><a href="#">About me</a></li>
@@ -50,7 +50,7 @@
 		<c:if test="${not empty blog}">
 			<div class="panel panel-default">
 				<div class="panel-body">
-					<p><b style="font-size: 30px;">${blog.title }</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><fmt:formatDate value="${blog.createDate }" pattern="yyyy-MM-dd HH:mm:ss"/></i></p>
+					<p><b style="font-size: 30px;">${blog.title }</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><fmt:formatDate value="${blog.publishTime }" pattern="yyyy-MM-dd HH:mm:ss"/></i></p>
 				${blog.content }
 				<p style="font-size: 12px;">
 				</p>

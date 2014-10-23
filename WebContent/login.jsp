@@ -62,9 +62,9 @@
 </head>
 <body>
  <div class="container">
- 	<p class="text-right"><a href="${pageContext.request.contextPath }/register">Sign up</a></p>
+ 	<p class="text-right"><a href="${pageContext.request.contextPath }/register">註 冊</a></p>
  	<form id="loginForm" action="${pageContext.request.contextPath }/login" method="post" name="loginForm" class="form-signin" role="form">
-        <h2 class="form-signin-heading">Please sign in</h2>
+        <h2 class="form-signin-heading">登 錄</h2>
         <input type="text" name="username" id="username" class="form-control" placeholder="Username or Email" data-container="body" data-trigger="manual" data-toggle="popover" data-placement="right" data-content="" />
         <input type="password" name="password" id="password" class="form-control" placeholder="Password" data-container="body" data-trigger="manual" data-toggle="popover" data-placement="right" data-content="" >
         <!-- <div class="checkbox">
@@ -72,7 +72,7 @@
             <input type="checkbox" value="remember-me"> Remember me
           </label>
         </div> -->
-        <button id="loginBtn" class="btn btn-lg btn-primary btn-block" type="button">Sign in</button>
+        <button id="loginBtn" class="btn btn-lg btn-primary btn-block" type="button">登 錄</button>
 	  <br/>
  	</form>
 	  <c:if test="${not empty msg }">

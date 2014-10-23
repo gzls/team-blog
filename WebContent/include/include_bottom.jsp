@@ -7,6 +7,6 @@
 <hr/>
 <div class="footer">
   <div class="container">
-    <p>CopyRight &copy; 2014-201? 广州脸书信息技术有限公司 blog.cmwebgame.com , All Rights Reserved</p>
+    <p>CopyRight &copy; 2013-2014 育駿科技 blog.cmwebgame.com , All Rights Reserved</p>
   </div>
 </div>

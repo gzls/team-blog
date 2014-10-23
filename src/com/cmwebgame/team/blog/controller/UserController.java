@@ -14,14 +14,19 @@ import com.cmwebgame.core.MultipartHttpServletRequest;
 import com.cmwebgame.core.renderer.Renderer;
 import com.cmwebgame.core.renderer.TemplateRenderer;
 import com.cmwebgame.team.blog.dao.impl.BlogDaoImpl;
+import com.cmwebgame.team.blog.dao.impl.GroupDaoImpl;
 import com.cmwebgame.team.blog.dao.impl.UserDaoImpl;
 import com.cmwebgame.team.blog.entity.Blog;
+import com.cmwebgame.team.blog.entity.Group;
 import com.cmwebgame.team.blog.entity.User;
+import com.cmwebgame.team.blog.entity.UserGroupRole;
+import com.cmwebgame.team.blog.util.MD5;
 
 public class UserController {
 	
 	private UserDaoImpl userDao = new UserDaoImpl();//暂不使用容器管理
 	private BlogDaoImpl blogDao = new BlogDaoImpl();//暂不使用容器管理
+	private GroupDaoImpl groupDao = new GroupDaoImpl();
 	
 	@Mapping("/login")
 	public String login(){
@@ -51,11 +56,11 @@ public class UserController {
 	@Mapping("/register")
 	public Renderer register(){
 		HttpServletRequest request = ActionContext.getActionContext().getHttpServletRequest();
-		System.out.println(request.getParameter("signup"));
 		if (request.getParameter("signup") != null){
 			request.setAttribute("msg", "註冊失敗，請檢查註冊信息。");
 		}
-		return new TemplateRenderer("/user/register.jsp");
+		List<Group> groups = groupDao.getGroupList();
+		return new TemplateRenderer("/user/register.jsp","groups",groups);
 	}
 	
 	//註冊
@@ -64,22 +69,32 @@ public class UserController {
 		HttpServletRequest request = ActionContext.getActionContext().getHttpServletRequest();
 		String ctx = request.getContextPath();
 		String username = request.getParameter("username");
+		String nickname = request.getParameter("nickname");
 		String password = request.getParameter("password");
 		String email = request.getParameter("email");
+		String group = request.getParameter("group");
 		
-		if (StringUtils.isBlank(username) || StringUtils.isBlank(password) || StringUtils.isBlank(email)){
+		if (StringUtils.isBlank(username) || StringUtils.isBlank(password)
+				|| StringUtils.isBlank(email) || StringUtils.isBlank(nickname)
+				|| StringUtils.isBlank(group)) {
 			return "redirect:"+ctx+"/register?signup=error";
 		}
 		
 		//insert
 		User user = new User();
-		user.setUsername(username);
-		user.setPassword(password);//暂不加密密码
+		user.setLoginName(username);
+		user.setNickName(nickname);
+		user.setPassword(MD5.crypt(password));//暂不加密密码
 		user.setEmail(email);
-		int id = userDao.insert(user);
+		int id = userDao.insertUser(user);//新增后，返回用户数据库ID值
 		if (id > 0){
 			user.setId(new Long(id));
 			request.getSession().setAttribute("user", user);
+			//更新用户组信息
+			UserGroupRole ugr = new UserGroupRole();
+			ugr.setUid(user.getId());
+			ugr.setGroupId(Long.parseLong(group));
+			userDao.insertUserGroupRole(ugr);
 		}
 		return "redirect:"+ctx+"/blog";
 	}
@@ -139,19 +154,19 @@ public class UserController {
 	}
 	
 	@Mapping("/u/$1")
-	public Renderer userHome(long id) {
+	public Renderer userHome(String name) {
 		HttpServletRequest request = ActionContext.getActionContext().getHttpServletRequest();
 		//获取当前登录用户
 		User loginUser = (User) request.getSession().getAttribute("user");
 		//获取当前访问的用户对象
-		User currentUser = userDao.getUserByIdOrName(id);
+		User currentUser = userDao.getUserByIdOrName(name);
 		if (currentUser == null) {
 			return new TemplateRenderer("/user/noSuchUser.jsp");
 		}
 		//获取当前访问用户的日志信息。
 		List<Blog> blogs = blogDao.getBlogsByUser(currentUser.getId());
 		boolean selfLogin = false;
-		if (loginUser != null && currentUser.getUsername().equals(loginUser.getUsername())){
+		if (loginUser != null && currentUser.getLoginName().equals(loginUser.getLoginName())){
 			selfLogin = true;
 		}
 		request.setAttribute("blogs", blogs);
@@ -160,7 +175,7 @@ public class UserController {
 		return new TemplateRenderer("/blog/userHome.jsp");
 	}
 
-	@Mapping("/changePwd")
+	@Mapping("/user/changePwd")
 	public void changePwd(){
 		HttpServletRequest request = ActionContext.getActionContext().getHttpServletRequest();
 		HttpServletResponse response = ActionContext.getActionContext().getHttpServletResponse();
@@ -172,16 +187,16 @@ public class UserController {
 		try {
 			if (user == null){
 				response.getWriter().print("1");//当前用户未登录
-			}else if (!password.equals(user.getPassword())){
+			}else if (!MD5.crypt(password).equals(user.getPassword())){
 				response.getWriter().print("2");//原密码不正确
 			}else if (!newPassword.equals(passwordCfm)){
 				response.getWriter().print("3");//新密码不一致
 			}else{
 				//修改新密码
-				user.setPassword(newPassword);
+				user.setPassword(MD5.crypt(newPassword));
 				boolean flag = userDao.changerPwd(user);
 				if (flag){
-					System.out.println("user : " + user.getUsername() +" change password");
+					System.out.println("user : " + user.getLoginName() +" change password");
 					response.getWriter().print("0");//密码修改成功
 				}
 			}
@@ -209,4 +224,5 @@ public class UserController {
 		}
 		throw new IOException("");
 	}
+	
 }

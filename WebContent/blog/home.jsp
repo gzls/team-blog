@@ -15,7 +15,7 @@
 <div class="container">
 <div class="row">
 	<div class="page-header">
-	  <h2>${user.username }的博客 </h2>
+	  <h2>${user.loginName }的博客 </h2>
 	</div>
 	<div class="col-md-3">
 		<ul class="nav nav-pills nav-stacked well">
@@ -47,7 +47,7 @@
 	<div class="col-md-9">
 		<ol class="breadcrumb">
 		  <li><a href="${ctx }/blog">Home</a></li>
-		  <li class="active">Data</li>
+		  <li class="active">個人中心</li>
 		</ol>
 		<c:forEach var="blog" items="${blogs }">
 			<div class="well">
@@ -58,7 +58,7 @@
 					${blog.contentHtml }
 				</p>
 				<p style="font-size: 12px;">
-					<fmt:formatDate value="${blog.createDate }" pattern="yyyy-MM-dd HH:mm:ss"/>
+					<fmt:formatDate value="${blog.publishTime }" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</p>
 				<p>
 					<a class="btn" href="${ctx }/blog/show/${blog.id }">查看</a> | 

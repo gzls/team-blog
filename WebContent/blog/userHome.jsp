@@ -5,7 +5,7 @@
 <html lang="zh-cn">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>${currentUser.username }的博客 - 臉書博客</title>
+<title>${currentUser.loginName }的博客 - 臉書博客</title>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/resources/boostrap/css/bootstrap.min.css" />
 </head>
 <body>
@@ -14,21 +14,21 @@
 <div class="container">
 <div class="row">
 	<div class="page-header">
-	  <h1>${currentUser.username }的博客 </h1>
-	  <span><a href="http://blog.cmwebgame.com/u/${currentUser.id }">http://blog.cmwebgame.com/u/${currentUser.id }</a></span>
+	  <h1>${currentUser.loginName }的博客 </h1>
+	  <span><a href="http://blog.cmwebgame.com/u/${currentUser.loginName }">http://blog.cmwebgame.com/u/${currentUser.loginName }</a></span>
 	</div>
 	<div class="col-md-2 well">
 		<a href="#" class="thumbnail">
 	      <img src="${pageContext.request.contextPath }/images/xiaoxin.jpg" alt="...">
 	    </a>
-	    <p class="text-center">${currentUser.username }</p>
+	    <p class="text-center">${currentUser.loginName }</p>
 	    <!-- <p>Introduce</p> -->
-	    <p class="text-center"><fmt:formatDate value="${currentUser.createDate }" pattern="yyyy-MM-dd"/></p>
+	    <p class="text-center"><fmt:formatDate value="${currentUser.createTime }" pattern="yyyy-MM-dd"/></p>
 	</div>
 	<div class="col-md-10">
 		<div>
 			<ul class="nav nav-pills" role="tablist">
-			  <li role="presentation" class="active"><a href="${pageContext.request.contextPath }/u/${currentUser.id }">Home</a></li>
+			  <li role="presentation" class="active"><a href="${pageContext.request.contextPath }/u/${currentUser.loginName }">Home</a></li>
 			  <li role="presentation"><a href="#">Blog</a></li>
 			  <li role="presentation"><a href="#">Messages</a></li>
 			  <li role="presentation"><a href="#">About me</a></li>
@@ -44,9 +44,8 @@
 					${blog.content }
 				</p>
 				<p style="font-size: 12px;">
-					<fmt:formatDate value="${blog.createDate }" pattern="yyyy-MM-dd HH:mm:ss"/>
+					<fmt:formatDate value="${blog.publishTime }" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</p>
-				<p>
 					<c:if test="${selfLogin == false }">
 						<a class="btn" href="${pageContext.request.contextPath }/blog/show/${blog.id }">查看</a>
 					</c:if>
@@ -55,6 +54,7 @@
 						<a class="btn" href="${pageContext.request.contextPath }/blog/edit/${blog.id }">编辑</a> |
 						<a class="btn" href="${pageContext.request.contextPath }/blog/delete/${blog.id }">删除</a>
 					</c:if>
+				<p>
 				</p>
 			</div>
 		</c:forEach>

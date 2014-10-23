@@ -11,16 +11,16 @@
 <div style="padding-bottom: 40px;">
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="navbar-header">
-     <a id="aboutBlog" class="navbar-brand" href="#">广州脸书团队博客</a>
+     <a id="aboutBlog" class="navbar-brand" href="#">育駿团队博客</a>
   </div>
   <div>
   	<c:if test="${not empty user }">
      <ul class="nav navbar-nav">
 		 <!-- <li><a><img src="${ctx }/images/xiaoxin.jpg" width="22px" height="22px;" class="img-circle"></a></li> -->
         <li class="dropdown">
-        	<a href="#" class="dropdown-toggle" data-toggle="dropdown">${user.username }&nbsp;<b class="caret"></b></a>
+        	<a href="#" class="dropdown-toggle" data-toggle="dropdown">${user.loginName }&nbsp;<b class="caret"></b></a>
         	<ul class="dropdown-menu">
-        	   <li><a href="<c:url value='/u/${user.id }' />">我的博客</a></li>
+        	   <li><a href="<c:url value='/u/${user.loginName }' />">我的博客</a></li>
               <li><a href="<c:url value='/blog' />">博客管理</a></li>
               <li><a id="changePwd" href="javascript:;">修改密码</a></li>
                <li class="divider"></li>
@@ -61,15 +61,15 @@
                aria-hidden="true">×
             </button>
             <h4 class="modal-title" id="myModalLabel">
-               	关于广州脸书团队Blog
+               	关于育駿團隊博客
             </h4>
          </div>
          <div class="modal-body">
 	         <h2>Team-Blog</h2>
 	         v-1.0<br/><br/>
-	         <b>广州市脸书信息科技有限公司</b>
+	         <b>育駿科技</b>
 	         <br/><br/>
-	         Team-Blog诞生于广州脸书。嘿嘿<!-- 我们是一群积极向上的男青年，致力于让我们有一个更加开放、活泼的工作交流平台 -->。
+	         Team-Blog诞生于育駿科技。嘿嘿，致力于让我们有一个更加开放、活泼的工作交流平台。
             <br/><br/>
                                     这听起来很有趣吧? (按下 ESC 按钮退出)
          </div>
@@ -228,7 +228,7 @@ $("#changePwd").click(function(){
  $("#changPwdBtn").click(function(){
 	  if ($("#changePwdForm").valid()){
 		  $("#changePwdForm").ajaxSubmit({
-			  url : "${pageContext.request.contextPath }/changePwd",
+			  url : "${pageContext.request.contextPath }/user/changePwd",
 			  type : "POST",
 			  dataType : "text",
 			  clearForm : true,

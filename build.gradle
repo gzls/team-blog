@@ -2,6 +2,7 @@ apply plugin: 'war'
 apply plugin: 'eclipse-wtp'
 group = 'com.cmwebgame'
 
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 task demo << {
 	configurations.runtime.collect{println(it.getName())}
 }

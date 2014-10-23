@@ -16,19 +16,45 @@ public class Blog extends IdEntity {
 	private String title;
 	private String content;
 	private String contentHtml;
-	private Timestamp createDate;
-	private long userId;
+	private Timestamp publishTime;
+	private Timestamp modifyTime;
+	private long authorId;
+	private long customType;
+	private long moduleType;
 
-	public Blog() {
+	public Timestamp getPublishTime() {
+		return publishTime;
 	}
 
-	public Blog(long id, String title, String content, String contentHtml,
-			Timestamp createDate) {
-		this.id = id;
-		this.title = title;
-		this.content = content;
-		this.contentHtml = contentHtml;
-		this.createDate = createDate;
+	public void setPublishTime(Timestamp publishTime) {
+		this.publishTime = publishTime;
+	}
+
+	public Timestamp getModifyTime() {
+		return modifyTime;
+	}
+
+	public void setModifyTime(Timestamp modifyTime) {
+		this.modifyTime = modifyTime;
+	}
+
+	public long getAuthorId() {
+		return authorId;
+	}
+
+	public void setAuthorId(long authorId) {
+		this.authorId = authorId;
+	}
+
+	public long getCustomType() {
+		return customType;
+	}
+
+	public void setCustomType(long customType) {
+		this.customType = customType;
+	}
+	
+	public Blog() {
 	}
 
 	public String getTitle() {
@@ -47,13 +73,6 @@ public class Blog extends IdEntity {
 		this.content = content;
 	}
 
-	public Timestamp getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(Timestamp createDate) {
-		this.createDate = createDate;
-	}
 
 	public String getContentHtml() {
 		return contentHtml;
@@ -63,11 +82,12 @@ public class Blog extends IdEntity {
 		this.contentHtml = contentHtml;
 	}
 
-	public long getUserId() {
-		return userId;
+	public long getModuleType() {
+		return moduleType;
 	}
 
-	public void setUserId(long userId) {
-		this.userId = userId;
+	public void setModuleType(long moduleType) {
+		this.moduleType = moduleType;
 	}
+
 }

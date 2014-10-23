@@ -42,11 +42,16 @@ body {
   z-index: 2;
 }
 .form-signup input[type="email"] {
-  margin-bottom: -1px;
+  margin-bottom: 1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
 .form-signup input[type="password"] {
+  margin-bottom: 1px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.form-signup select {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
@@ -55,9 +60,9 @@ body {
 </head>
 <body>
  <div class="container">
- 	<p class="text-right"><a href="${pageContext.request.contextPath }/">Sign in</a></p>
+ 	<p class="text-right"><a href="${pageContext.request.contextPath }/">登 錄</a></p>
  	<form id="joinForm" action="${pageContext.request.contextPath }/join" method="post" name="joinForm" class="form-signup" role="form">
-        <h2 class="form-signup-heading">Please sign up</h2>
+        <h2 class="form-signup-heading">註 冊</h2>
         <!-- <div class="input-group">
 		  <span class="input-group-addon glyphicon glyphicon-user"></span>
 		</div>
@@ -68,10 +73,20 @@ body {
 		<div class="input-group">
 			<span class="input-group-addon glyphicon glyphicon-lock"></span>
 		</div> -->
+	    <div class="form-group">
 	    <input type="text" name="username" id="username" class="form-control" placeholder="Pick a username" data-container="body" data-trigger="manual" data-toggle="popover" data-placement="right" data-content="" >
+	    <input type="text" name="nickname" id="nickname" class="form-control" placeholder="Pick a nickname" data-container="body" data-trigger="manual" data-toggle="popover" data-placement="right" data-content="" >
         <input type="text" name="email" id="email" class="form-control" placeholder="Your email" data-container="body" data-trigger="manual" data-toggle="popover" data-placement="right" data-content="" >
 	    <input type="password" name="password" id="password" class="form-control" placeholder="Create a password" data-container="body" data-trigger="manual" data-toggle="popover" data-placement="right" data-content="" />
-       	<button id="joinBtn" class="btn btn-lg btn-success btn-block" type="button">Sign up</button>
+	    <input type="password" name="passwordcfm" id="passwordcfm" class="form-control" placeholder="Confirm your password" data-container="body" data-trigger="manual" data-toggle="popover" data-placement="right" data-content="" />
+       	<select name="group" id="group" class="form-control">
+       		<option value="">選擇你的分組</option>
+       		<c:forEach var="group" items="${groups }">
+       			<option value="${group.id }">${group.name }</option>
+       		</c:forEach>
+       	</select>
+	    </div>
+       	<button id="joinBtn" class="btn btn-lg btn-success btn-block" type="button">註 冊</button>
 	  <br/>
 	  <c:if test="${not empty msg }">
 	  	<div class="alert alert-danger" role="alert">
@@ -99,14 +114,26 @@ body {
    						isUserName : true,
    						remote : "${pageContext.request.contextPath }/checkJoin"
    					},
+   					nickname : {
+   						required : true,
+   						rangelength : [3,15],
+   					},
    					password : {
    						required : true,
    						minlength : 6
+   					},
+   					passwordcfm : {
+   						required : true,
+   						minlength : 6,
+   						equalTo : "#password"
    					},
    					email : {
    						required : true,
    						email : true,
    						remote : "${pageContext.request.contextPath }/checkJoin"
+   					},
+   					group : {
+   						required : true
    					}
    					
    				},
@@ -117,14 +144,26 @@ body {
    						isUserName : "用户名格式有误",
    						remote : "用户名已存在"
    					},
+   					nickname : {
+   						required : "请输入你的昵称",
+   						rangelength : "昵称长度为3-15位"
+   					},
    					password : {
    						required : "请输入密码",
    						minlength : "密码至少为6位"
+   					},
+   					passwordcfm : {
+   						required : "请确认密码",
+   						minlength : "确认密码至少为6位",
+   						equalTo	: "两次密码不一致"
    					},
    					email : {
    						required : "请输入Email地址",
    						email : "请输入正确格式的Email地址",
    						remote : "Email已被注册"
+   					},
+   					group : {
+   						required : "请选择你的部门"
    					}
    				},
    				errorPlacement: function(error, element) {
