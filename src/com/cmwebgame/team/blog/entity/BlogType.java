@@ -13,6 +13,7 @@ public class BlogType extends IdEntity {
 	
 	private long userId;
 	private String name;
+	private int blogcount;
 	public long getUserId() {
 		return userId;
 	}
@@ -24,6 +25,12 @@ public class BlogType extends IdEntity {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public int getBlogcount() {
+		return blogcount;
+	}
+	public void setBlogcount(int blogcount) {
+		this.blogcount = blogcount;
 	}
 	
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.cmwebgame.core.ActionContext;
 import com.cmwebgame.core.Mapping;
@@ -14,19 +14,23 @@ import com.cmwebgame.core.MultipartHttpServletRequest;
 import com.cmwebgame.core.renderer.Renderer;
 import com.cmwebgame.core.renderer.TemplateRenderer;
 import com.cmwebgame.team.blog.dao.impl.BlogDaoImpl;
+import com.cmwebgame.team.blog.dao.impl.BlogTypeDaoImpl;
 import com.cmwebgame.team.blog.dao.impl.GroupDaoImpl;
 import com.cmwebgame.team.blog.dao.impl.UserDaoImpl;
 import com.cmwebgame.team.blog.entity.Blog;
+import com.cmwebgame.team.blog.entity.BlogType;
 import com.cmwebgame.team.blog.entity.Group;
 import com.cmwebgame.team.blog.entity.User;
 import com.cmwebgame.team.blog.entity.UserGroupRole;
 import com.cmwebgame.team.blog.util.MD5;
+import com.cmwebgame.team.blog.util.PageBean;
 
 public class UserController {
 	
 	private UserDaoImpl userDao = new UserDaoImpl();//暂不使用容器管理
 	private BlogDaoImpl blogDao = new BlogDaoImpl();//暂不使用容器管理
 	private GroupDaoImpl groupDao = new GroupDaoImpl();
+	private BlogTypeDaoImpl blogTypeDao = new BlogTypeDaoImpl();
 	
 	@Mapping("/login")
 	public String login(){
@@ -153,8 +157,16 @@ public class UserController {
 		response.getWriter().flush();
 	}
 	
-	@Mapping("/u/$1")
-	public Renderer userHome(String name) {
+	/**
+	 * 用戶博客主頁， $1:博客博主用戶名。$2：當前第一頁，
+	 * Url ： /u/neal/   默認第一頁。 
+	 * Url : /u/neal/2  第二頁，依此類推，非數字時默認第一頁
+	 * @param name 博主名
+	 * @param pagenum 當前頁
+	 * @return
+	 */
+	@Mapping("/u/$1/$2")
+	public Renderer userHome(String name,String pagenum) {
 		HttpServletRequest request = ActionContext.getActionContext().getHttpServletRequest();
 		//获取当前登录用户
 		User loginUser = (User) request.getSession().getAttribute("user");
@@ -163,18 +175,82 @@ public class UserController {
 		if (currentUser == null) {
 			return new TemplateRenderer("/user/noSuchUser.jsp");
 		}
-		//获取当前访问用户的日志信息。
-		List<Blog> blogs = blogDao.getBlogsByUser(currentUser.getId());
+		//获取当前访问用户的日志信息(分頁數據)。
+		int page = 1;
+		if (StringUtils.isNumeric(pagenum)){
+			page = Integer.parseInt(pagenum);
+		}
+		PageBean pageBean = new PageBean();
+		pageBean.setPage(page);
+		List<Blog> blogs = blogDao.getBlogsByUserAndPage(currentUser.getId(),pageBean);
+		//是否自身Blog主頁
 		boolean selfLogin = false;
 		if (loginUser != null && currentUser.getLoginName().equals(loginUser.getLoginName())){
 			selfLogin = true;
 		}
 		request.setAttribute("blogs", blogs);
-		request.setAttribute("currentUser", currentUser);//当前访问用户
+		request.setAttribute("pageBean", pageBean);
 		request.setAttribute("selfLogin", selfLogin);
+		request.setAttribute("currentUser", currentUser);//当前访问用户
 		return new TemplateRenderer("/blog/userHome.jsp");
 	}
 
+	/**
+	 * 用戶博客展示，$1 用戶名 $2格式：A_B A:當前頁,B:博客類型
+	 * @param name
+	 * @param pagenum
+	 */
+	@Mapping("/$1/bloglist/$2")
+	public Renderer userBlogList(String name,String params){
+		HttpServletRequest request = ActionContext.getActionContext().getHttpServletRequest();
+		//當前登錄人
+		User loginUser = (User) request.getSession().getAttribute("user");
+		//登錄人訪問對象
+		User currentUser = userDao.getUserByIdOrName(name);
+		if (currentUser == null) {
+			return new TemplateRenderer("/user/noSuchUser.jsp");
+		}
+		//是否自身Blog主頁
+		boolean selfLogin = false;
+		if (loginUser != null && currentUser.getLoginName().equals(loginUser.getLoginName())){
+			selfLogin = true;
+		}
+		//先獲取用戶博客分類信息
+		List<BlogType> blogTypes = blogTypeDao.getBlogTypeList(currentUser.getId());
+		
+		//分頁數據信息。
+		int page = 1;
+		String blogType = null;
+		String pageNum = null;
+		if (StringUtils.isNoneBlank(params)){
+			String[] param = params.split("_");
+			if (param.length >= 2){ //存在兩個值的時候才取值。
+				pageNum = param[0];
+				blogType = param[1];
+			}
+		}
+		if (StringUtils.isNumeric(pageNum)){
+			page = Integer.parseInt(pageNum);
+		}
+		PageBean pageBean = new PageBean();
+		pageBean.setPage(page);
+		//判斷是否有博客類型
+		Blog blog = new Blog();
+		if (StringUtils.isNoneBlank(blogType) && StringUtils.isNumeric(blogType)){
+			blog.setCustomType(Long.parseLong(blogType));
+		}
+		//用戶Blog
+		blog.setAuthorId(currentUser.getId());
+		List<Blog> blogs = blogDao.getBlogsByBlogAndPage(blog, pageBean);
+		request.setAttribute("blogs", blogs);
+		request.setAttribute("type", blogType);
+		request.setAttribute("pageBean", pageBean);
+		request.setAttribute("blogTypes", blogTypes);
+		request.setAttribute("selfLogin", selfLogin);
+		request.setAttribute("currentUser", currentUser);//当前访问用户
+		return new TemplateRenderer("/user/userBlog.jsp");
+	}
+	
 	@Mapping("/user/changePwd")
 	public void changePwd(){
 		HttpServletRequest request = ActionContext.getActionContext().getHttpServletRequest();

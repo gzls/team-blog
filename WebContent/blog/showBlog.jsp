@@ -18,7 +18,7 @@
 	<c:if test="${not empty owner}">
 		<div class="page-header">
 		  <h1>${owner.loginName }的博客 </h1>
-		  <span><a href="http://blog.cmwebgame.com/u/${owner.loginName }">http://blog.cmwebgame.com/u/${owner.loginName }</a></span>
+		  <span><a href="http://blog.cmwebgame.com/u/${owner.loginName }/">http://blog.cmwebgame.com/u/${owner.loginName }</a></span>
 		</div>
 		<div class="col-md-2 well">
 			<a href="#" class="thumbnail">
@@ -33,10 +33,9 @@
 		<c:if test="${not empty owner }">
 			<div>
 				<ul class="nav nav-pills" role="tablist">
-				  <li role="presentation"><a href="${pageContext.request.contextPath }/u/${owner.loginName }">Home</a></li>
-				  <li role="presentation" class="active"><a href="#">Blog</a></li>
-				  <li role="presentation"><a href="#">Messages</a></li>
-				  <li role="presentation"><a href="#">About me</a></li>
+				  <li role="presentation"><a href="${pageContext.request.contextPath }/u/${owner.loginName }/">首頁</a></li>
+				  <li role="presentation" class="active"><a href="${pageContext.request.contextPath }/${owner.loginName}/bloglist/">博文目錄</a></li>
+				  <li role="presentation"><a href="#">關於我</a></li>
 				</ul>
 			</div>
 		</c:if>

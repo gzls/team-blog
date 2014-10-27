@@ -23,10 +23,10 @@
 				<i class="glyphicon glyphicon-home"></i> 个人中心
 			</li>
 			<li>
-				<a  href="#"><i class="glyphicon glyphicon-wrench"></i> 日誌管理</a>
+				<a  href="${ctx }/blog/"><i class="glyphicon glyphicon-wrench"></i> 日誌管理</a>
 			</li>
 			<li>
-				<a href="<c:url value='/blog/add' />"><i class="glyphicon glyphicon-floppy-disk"></i> 写日志</a>
+				<a href="<c:url value='/blog/add/' />"><i class="glyphicon glyphicon-floppy-disk"></i> 写日志</a>
 			</li>
 			<!-- <li>
 				<a href="#">应用</a>
@@ -46,8 +46,8 @@
 	</div>
 	<div class="col-md-9">
 		<ol class="breadcrumb">
-		  <li><a href="${ctx }/blog">Home</a></li>
-		  <li class="active">Photo</li>
+		  <li><a href="${ctx }/blog/">首頁</a></li>
+		  <li class="active">修改頭像</li>
 		</ol>
 		
 		<div class="panel panel-success">

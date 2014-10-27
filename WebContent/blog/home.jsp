@@ -16,6 +16,7 @@
 <div class="row">
 	<div class="page-header">
 	  <h2>${user.loginName }的博客 </h2>
+	  <span><a href="http://blog.cmwebgame.com/u/${user.loginName }/">http://blog.cmwebgame.com/u/${user.loginName }</a></span>
 	</div>
 	<div class="col-md-3">
 		<ul class="nav nav-pills nav-stacked well">
@@ -26,11 +27,8 @@
 				<a  href="#"><i class="glyphicon glyphicon-wrench"></i> 博客管理</a>
 			</li>
 			<li>
-				<a href="<c:url value='/blog/add' />"><i class="glyphicon glyphicon-floppy-disk"></i> 写博客</a>
+				<a href="<c:url value='/blog/add/' />"><i class="glyphicon glyphicon-floppy-disk"></i> 写博客</a>
 			</li>
-			<!-- <li>
-				<a href="#">应用</a>
-			</li> -->
 			<li>
 				<i class="glyphicon glyphicon-cog"></i> 功能列表
 			</li>
@@ -46,7 +44,7 @@
 	</div>
 	<div class="col-md-9">
 		<ol class="breadcrumb">
-		  <li><a href="${ctx }/blog">Home</a></li>
+		  <li><a href="${ctx }/blog/">首頁</a></li>
 		  <li class="active">個人中心</li>
 		</ol>
 		<c:forEach var="blog" items="${blogs }">
@@ -70,21 +68,34 @@
 		<c:if test="${empty blogs }">
 			<div class="jumbotron">
 			  <h2>Hello!</h2>
-			  <p>暫無博客？點擊 <a href="<c:url value= '/blog/add' />">發博客</a> 寫一篇屬於自己的博客。</p>
-			  <p><a href="<c:url value= '/blog/add' />" class="btn btn-primary btn-lg" role="button">發博客</a></p>
+			  <p>暫無博客？點擊 <a href="<c:url value= '/blog/add/' />">發博客</a> 寫一篇屬於自己的博客。</p>
+			  <p><a href="<c:url value= '/blog/add/' />" class="btn btn-primary btn-lg" role="button">發博客</a></p>
 			</div>
 		</c:if>
-		<%-- <c:if test="${not empty blogs }">
-			<ul class="pagination">
-			  <li class="disabled"><a href="#">&laquo;</a></li>
-			  <li class="active"><a href="#">1</a></li>
-			  <li><a href="#">2</a></li>
-			  <li><a href="#">3</a></li>
-			  <li><a href="#">4</a></li>
-			  <li><a href="#">5</a></li>
-			  <li><a href="#">&raquo;</a></li>
+		<c:if test="${not empty blogs }">
+			<ul class="pager">
+		  		<c:choose>
+			  		<c:when test="${pageBean.page == 1 }">
+			  			<li class="disabled"><a>首頁</a></li>
+				  		<li class="disabled"><a>上一页</a></li>
+			  		</c:when>
+			  		<c:otherwise>
+			  			<li><a href="${ctx }/blog/1">首頁</a></li>
+				  		<li><a href="${ctx }/blog/${pageBean.page - 1 }">上一页</a></li>
+			  		</c:otherwise>
+			  	</c:choose>
+			  	<c:choose>
+			  		<c:when test="${pageBean.page == pageBean.totalPage }">
+			  			<li class="disabled"><a>下一页</a></li>
+			  			<li class="disabled"><a>末頁</a></li>
+			  		</c:when>
+			  		<c:otherwise>
+			  			<li><a href="${ctx }/blog/${pageBean.page + 1 }">下一页</a></li>
+			  			<li><a href="${ctx }/blog/${pageBean.totalPage }">末頁</a></li>
+			  		</c:otherwise>
+			  	</c:choose>
 			</ul>
-		</c:if> --%>
+		</c:if>
 	</div>
 </div>
 <!-- bottom -->

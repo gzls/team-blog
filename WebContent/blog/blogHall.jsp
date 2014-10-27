@@ -6,7 +6,7 @@
 <html lang="zh-cn">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>博客大厅</title>
+<title>博客大廳</title>
 <link rel="stylesheet" type="text/css" href="${ctx }/resources/boostrap/css/bootstrap.min.css" />
 <style type="text/css">
 .hall-name{
@@ -95,87 +95,68 @@ font-size:18px;
 <div class="container">
 <div class="row">
 	<div class="page-header">
-	  <h2>欢迎使用脸书博客 </h2>
+	  <h2>欢迎使用育駿博客 </h2>
 	</div>
 	<div class="col-md-8">
 		<ul class="nav nav-tabs" role="tablist">
 		  <li role="presentation" class="active"><a href="#">Home</a></li>
-		  <!-- <li role="presentation"><a href="#">Profile</a></li>
-		  <li role="presentation"><a href="#">Messages</a></li> -->
 		</ul>
 		<br>
 		<!-- 最新博客 -->
-		<div class="panel panel-default">
-		  <div class="panel-body">
-		    <div class="col-xs-2 col-sm-2">
-		    	 <a href="${ctx }/" class="thumbnail">
-			      <img src="${ctx }/images/xiaoxin.jpg" alt="...">
-			    </a>
-		    </div>
-		    <div class="col-sm-10">
-		    	<h4><a href="#" class="hall-name">博主名字</a>&nbsp;<a href="#" class="hall-title">博客标题</a></h4>
-		    	<p class="text-muted">博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容</p>
-		    	<p>
-		    		<small>2014-10-12 10:10:10</small>
-		    		<small>标签：<a href="#" class="tag-info">Java</a><a href="#" class="tag-info">交流</a></small>
-		    	</p>
-		    </div>
-		  </div>
-		</div>
-		
-		<div class="panel panel-default">
-		  <div class="panel-body">
-		    <div class="col-xs-2 col-sm-2">
-		    	 <a href="${ctx }/" class="thumbnail">
-			      <img src="${ctx }/images/xiaoxin.jpg" alt="...">
-			    </a>
-		    </div>
-		    <div class="col-sm-10">
-		    	<h4><a href="#" class="hall-name">博主名字</a>&nbsp;<a href="#" class="hall-title">博客标题</a></h4>
-		    	<p class="text-muted">博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容</p>
-		    	<p>
-		    		<small>2014-10-12 10:10:10</small>
-		    		<small>标签：<a href="#" class="tag-info">Java</a><a href="#" class="tag-info">交流</a></small>
-		    	</p>
-		    </div>
-		  </div>
-		</div>
-		<div class="panel panel-default">
-		  <div class="panel-body">
-		    <div class="col-xs-2 col-sm-2">
-		    	 <a href="${ctx }/" class="thumbnail">
-			      <img src="${ctx }/images/xiaoxin.jpg" alt="...">
-			    </a>
-		    </div>
-		    <div class="col-sm-10">
-		    	<h4><a href="#" class="hall-name">博主名字</a>&nbsp;<a href="#" class="hall-title">博客标题</a></h4>
-		    	<p class="text-muted">博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容</p>
-		    	<p>
-		    		<small>2014-10-12 10:10:10</small>
-		    		<small>标签：<a href="#" class="tag-info">Java</a><a href="#" class="tag-info">交流</a></small>
-		    	</p>
-		    </div>
-		  </div>
-		</div>
+		<c:forEach var="blog" items="${blogs }">
+			<div class="panel panel-default">
+			  <div class="panel-body">
+			    <div class="col-xs-2 col-sm-2">
+			    	 <a href="${ctx }/" class="thumbnail">
+				      <img src="${ctx }/images/xiaoxin.jpg" alt="...">
+				    </a>
+			    </div>
+			    <div class="col-sm-10">
+			    	<h4><a href="#" class="hall-name">博主名字</a>&nbsp;<a href="${ctx }/blog/show/${blog.id}" class="hall-title">${blog.title }</a></h4>
+			    	<p class="text-muted">${blog.content }</p>
+			    	<p>
+			    		<small><fmt:formatDate value="${blog.publishTime }" pattern="yyyy-MM-dd hh:mm:ss" /></small>
+			    		<small>标签：<a href="#" class="tag-info">Java</a><a href="#" class="tag-info">交流</a></small>
+			    	</p>
+			    </div>
+			  </div>
+			</div>
+		</c:forEach>
 		<!-- 分页Tag -->
-		<ul class="pagination">
-		  <li class="disabled"><a href="#">&laquo;</a></li>
-		  <li class="active"><a href="#">1</a></li>
-		  <li><a href="#">2</a></li>
-		  <li><a href="#">3</a></li>
-		  <li><a href="#">4</a></li>
-		  <li><a href="#">5</a></li>
-		  <li><a href="#">&raquo;</a></li>
-		</ul>
+		<c:if test="${not empty blogs }">
+			<ul class="pager">
+		  		<c:choose>
+			  		<c:when test="${pageBean.page == 1 }">
+			  			<li class="disabled"><a>首頁</a></li>
+				  		<li class="disabled"><a>上一页</a></li>
+			  		</c:when>
+			  		<c:otherwise>
+			  			<li><a href="${ctx }/public/1">首頁</a></li>
+				  		<li><a href="${ctx }/public/${pageBean.page - 1 }">上一页</a></li>
+			  		</c:otherwise>
+			  	</c:choose>
+			  	<c:choose>
+			  		<c:when test="${pageBean.page == pageBean.totalPage }">
+			  			<li class="disabled"><a>下一页</a></li>
+			  			<li class="disabled"><a>末頁</a></li>
+			  		</c:when>
+			  		<c:otherwise>
+			  			<li><a href="${ctx }/public/${pageBean.page + 1 }">下一页</a></li>
+			  			<li><a href="${ctx }/public/${pageBean.totalPage }">末頁</a></li>
+			  		</c:otherwise>
+			  	</c:choose>
+			</ul>
+		</c:if>
 	</div>
+	<!-- right -->
 	<div class="col-md-4">
 		<div class="panel panel-default">
 		  <div class="panel-body">
 		  <c:if test="${empty user }">
 		  	<div class="unlogin">
-		  		<h3 class="text-center">脸书博友，欢迎您！</h3>
+		  		<h3 class="text-center">育駿博友，欢迎您！</h3>
 		  		<p class="text-center">
-		  			<button id="unLoginBtn" type="button" class="btn btn-link">Sign in</button>
+		  			<button id="unLoginBtn" type="button" class="btn btn-link">登 錄</button>
 		  		</p>
 		  	</div>
 		  </c:if>

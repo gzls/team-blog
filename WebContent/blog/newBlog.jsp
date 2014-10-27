@@ -17,7 +17,7 @@
 	  <h1>${user.loginName }的博客 </h1>
 	</div>
 	<div class="panel panel-default">
- 	<form id="submitForm" action="${ctx }/blog/publish" method="post">
+ 	<form id="submitForm" action="${ctx }/blog/publish/" method="post">
  	  <div class="panel-heading">
 		<div class="input-group">
 		  <span class="input-group-addon">博客標題</span>
@@ -39,7 +39,16 @@
 		  	</select>
 		  	<button id="addBlogTypeBtn" type="button" class="btn btn-link">添加分類</button>
 		</div>
+		<!-- Tag -->
+		<div class="input-group" style="float: right;">
+			<span class="input-group-addon">標籤：</span>
+			<input type="text" id="blogTag" name="blogType" class="form-control" style="width: 170px;" />
+		  	<button id="addBlogTagBtn" type="button" class="btn btn-link">添加標籤</button>
+		</div>
+		
 	  </div>
+	  
+	  <!-- Tag -->
  	</form>
 	</div>
 <c:if test="${not empty msg }">
@@ -152,7 +161,7 @@
 			}
 			//异步提交表单
 			$("#categoryForm").ajaxSubmit({
-				url : "${ctx }/blog/add_category",
+				url : "${ctx }/blog/add_category/",
 				  type : "POST",
 				  dataType : "text",
 				  clearForm : true,
@@ -182,8 +191,33 @@
 			});
 		});
 		$("#blogTypeModal").on('hide.bs.modal',function(){
+			$("#categoryInfo").html('');
 			$("#category").attr('data-content','');
 			$("#category").popover('hide');
+		});
+		
+		$("#addBlogTagBtn").click(function(){
+			var blogTag = $.trim($("#blogTag").val());
+			if (blogTag == ''){
+				$("#alertModal").modal();
+				$("#alertInfo").text("請輸入標籤名稱");
+				return;
+			}
+			
+			//檢查Tag是否存在。
+			$.ajax({
+				url : "${ctx}/blog/checkBlogTag",
+				type : "POST",
+				dataType : 'text',
+				data : {"blogTag":blogTag},
+				success : function(data){
+					
+				},
+				error : function (XMLHttpRequest, textStatus, errorThrown) {
+				}
+			});
+			
+			
 		});
 		
 		$("#cancel").click(function(){

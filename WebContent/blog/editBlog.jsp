@@ -29,7 +29,7 @@
 		</c:if>
 		<c:if test="${not empty blog}">
 			<div class="panel panel-default">
-			 	<form id="submitForm" action="${ctx }/blog/publish" method="post">
+			 	<form id="submitForm" action="${ctx }/blog/publish/" method="post">
 			 	  <div class="panel-heading">
 					<div class="input-group">
 					  <span class="input-group-addon">博客標題</span>
@@ -154,7 +154,7 @@
 			}
 			//异步提交表单
 			$("#categoryForm").ajaxSubmit({
-				url : "${ctx }/blog/add_category",
+				url : "${ctx }/blog/add_category/",
 				  type : "POST",
 				  dataType : "text",
 				  clearForm : true,
@@ -181,6 +181,7 @@
 			});
 		});
 		$("#blogTypeModal").on('hide.bs.modal',function(){
+			$("#categoryInfo").html('');
 			$("#category").attr('data-content','');
 			$("#category").popover('hide');
 		});

@@ -6,7 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.cmwebgame.core.ActionContext;
 import com.cmwebgame.core.Mapping;
@@ -14,39 +14,69 @@ import com.cmwebgame.core.renderer.Renderer;
 import com.cmwebgame.core.renderer.TemplateRenderer;
 import com.cmwebgame.team.blog.dao.impl.BlogDaoImpl;
 import com.cmwebgame.team.blog.dao.impl.BlogTypeDaoImpl;
+import com.cmwebgame.team.blog.dao.impl.TagDaoImpl;
 import com.cmwebgame.team.blog.dao.impl.UserDaoImpl;
 import com.cmwebgame.team.blog.entity.Blog;
 import com.cmwebgame.team.blog.entity.BlogType;
 import com.cmwebgame.team.blog.entity.User;
+import com.cmwebgame.team.blog.util.PageBean;
 
 public class BlogController {
 
 	private BlogDaoImpl blogDao = new BlogDaoImpl();//暂不使用容器管理
 	private UserDaoImpl userDao = new UserDaoImpl();//暂不使用容器管理
 	private BlogTypeDaoImpl blogTypeDao = new BlogTypeDaoImpl();
+	private TagDaoImpl tagDao = new TagDaoImpl();
 	
-	//博客大厅
-	@Mapping("/public")
-	public Renderer blogHall(){
-		
+	/**
+	 * 分頁展示 url /public/$1 $1表示第幾頁，如果不是正整數  默認第一頁
+	 * @param pagenum
+	 * @return
+	 */
+	@Mapping("/public/$1")
+	public Renderer blogHall(String pagenum){
+		HttpServletRequest request = ActionContext.getActionContext().getHttpServletRequest();
+		//當前頁
+		int page = 1;
+		if (StringUtils.isNumeric(pagenum)){
+			page = Integer.parseInt(pagenum);
+		}
+		PageBean pageBean = new PageBean();
+		pageBean.setPage(page);
+		List<Blog> blogs = blogDao.getBlogList(pageBean);
+		request.setAttribute("pageBean", pageBean);
+		request.setAttribute("blogs", blogs);
 		return new TemplateRenderer("/blog/blogHall.jsp");
 	}
 	
 	
-	//个人中心
-	@Mapping("/blog/")
-	public Renderer home() {
+	/**
+	 * 分頁展示 url /blog/$1 $1表示第幾頁，如果不是正整數  默認第一頁
+	 * @param pagenum
+	 * @return
+	 */
+	@Mapping("/blog/$1")
+	public Renderer home(String pagenum) {
 		HttpServletRequest request = ActionContext.getActionContext().getHttpServletRequest();
 		User user = (User) request.getSession().getAttribute("user");
 		if (user == null) {
 			return new TemplateRenderer("/");
 		}
+		//當前頁
+		int page = 1;
+		if (StringUtils.isNumeric(pagenum)){
+			page = Integer.parseInt(pagenum);
+		}
+		PageBean pageBean = new PageBean();
+		pageBean.setPage(page);
 		// 通过user id获取自身blog
-		List<Blog> selfBlogs = blogDao.getBlogsByUser(user.getId());
-		return new TemplateRenderer("/blog/home.jsp", "blogs", selfBlogs);
+		List<Blog> selfBlogs = blogDao.getBlogsByUserAndPage(user.getId(),pageBean);
+		request.setAttribute("pageBean", pageBean);
+		request.setAttribute("blogs", selfBlogs);
+		return new TemplateRenderer("/blog/home.jsp");
 	}
 
-	@Mapping("/blog/add")
+	@Mapping("/blog/add/")
 	public Renderer add() {
 		HttpServletRequest request = ActionContext.getActionContext().getHttpServletRequest();
 		User user = (User) request.getSession().getAttribute("user");
@@ -111,7 +141,7 @@ public class BlogController {
 	/**
 	 * 發表新博客
 	 */
-	@Mapping("/blog/publish")
+	@Mapping("/blog/publish/")
 	public String publish() {
 		HttpServletRequest request = ActionContext.getActionContext().getHttpServletRequest();
 		String ctx = request.getContextPath();
@@ -177,7 +207,7 @@ public class BlogController {
 	}
 
 	//用户-博客类型
-	@Mapping("/blog/add_category")
+	@Mapping("/blog/add_category/")
 	public void addBlogTypeOfUser(){
 		HttpServletRequest request = ActionContext.getActionContext().getHttpServletRequest();
 		HttpServletResponse response = ActionContext.getActionContext().getHttpServletResponse();
@@ -208,6 +238,33 @@ public class BlogController {
 			response.getWriter().flush();
 			response.getWriter().close();
 		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 檢查Tag是否存在。
+	 * 返回信息 1：tag為空 2，已存在。0：可添加
+	 */
+	@Mapping("/blog/checkBlogTag")
+	public void checkBlogTag(){
+		HttpServletRequest request = ActionContext.getActionContext().getHttpServletRequest();
+		HttpServletResponse response = ActionContext.getActionContext().getHttpServletResponse();
+		String tagName = request.getParameter("tagName");
+		try {
+			if (StringUtils.isBlank(tagName)){
+				response.getWriter().print("1");
+			}else{
+				boolean flag = tagDao.isExits(tagName);
+				if (!flag){
+					response.getWriter().print("2");
+				}else{
+					response.getWriter().print("0");
+				}
+			}
+			response.getWriter().flush();
+			response.getWriter().close();
+		} catch (Exception e){
 			e.printStackTrace();
 		}
 	}

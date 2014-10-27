@@ -2,7 +2,6 @@ package com.cmwebgame.team.blog.dao.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -11,6 +10,7 @@ import java.util.List;
 import com.cmwebgame.dao.BaseDao;
 import com.cmwebgame.team.blog.entity.Blog;
 import com.cmwebgame.team.blog.entity.BlogType;
+import com.cmwebgame.team.blog.util.PageBean;
 import com.cmwebgame.team.common.JdbcUtil;
 
 public class BlogDaoImpl extends BaseDao<Blog> {
@@ -76,6 +76,66 @@ public class BlogDaoImpl extends BaseDao<Blog> {
 		return blogs;
 	}
 	
+	/**
+	 * 根據用戶id分頁展示相對應Blog信息
+	 * @param userId
+	 * @return
+	 */
+	public List<Blog> getBlogsByUserAndPage(long userId,PageBean pageBean){
+		Connection conn = this.getConnection();
+		List<Object> conditions = new ArrayList<Object>();
+		conditions.add(userId);
+		//查詢總條數
+		String countSql = "select count(*) from blog where author_id = ?";
+		int totalCount = JdbcUtil.getResultCount(conn, countSql, conditions);
+		pageBean.setTotalCount(totalCount);
+		//查詢分頁數據
+		conn = this.getConnection();//查詢count時連接被關，重新獲取
+		String sql = "select * from blog where author_id = ? limit ?,?";
+		conditions.add(pageBean.getStart());
+		conditions.add(pageBean.getPageSize());
+		List<Blog> blogs = this.getResultSetByCondition(conn, sql, conditions);
+		if (blogs.size() == 0){
+			pageBean.setPage(1);
+		}
+		return blogs;
+	}
+	
+	
+	/**
+	 * 根據用戶ID，博客類型 查詢對應博客
+	 * @param blog
+	 * @param pageBean
+	 * @return
+	 */
+	public List<Blog> getBlogsByBlogAndPage(Blog blog,PageBean pageBean){
+		Connection conn = this.getConnection();
+		List<Object> conditions = new ArrayList<Object>();
+		conditions.add(blog.getAuthorId());
+		//查詢總條數
+		String countSql = "select count(*) from blog where author_id = ?";
+		String sql = "select * from blog where author_id = ? ";
+	
+		if (blog.getCustomType() != 0){
+			countSql += " and custom_type = ?";
+			sql += "  and custom_type = ?";
+			conditions.add(blog.getCustomType());
+		}
+		sql += " limit ?,?";
+		
+		System.out.println("sql:" + sql);
+		System.out.println("countsql:" + countSql);
+		
+		int totalCount = JdbcUtil.getResultCount(conn, countSql, conditions);
+		pageBean.setTotalCount(totalCount);
+		//查詢分頁數據
+		conn = this.getConnection();//查詢count時連接被關，重新獲取
+		conditions.add(pageBean.getStart());
+		conditions.add(pageBean.getPageSize());
+		List<Blog> blogs = this.getResultSetByCondition(conn, sql, conditions);
+		return blogs;
+	}
+	
 	public boolean deleteBlogById(long id){
 		int result = 0;
 		Connection conn = this.getConnection();
@@ -112,26 +172,38 @@ public class BlogDaoImpl extends BaseDao<Blog> {
 	//檢測用戶是否有此分類
 	public boolean checkUserBlogType(BlogType blogType) {
 		Connection conn = this.getConnection();
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
+		List<Object> conditions = new ArrayList<Object>();
 		int result = 0;
 		try {
 			String sql = "select count(*) from custom_blog_type cbt where cbt.user_id = ? and cbt.name = ?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setLong(1, blogType.getUserId());
-			pstmt.setString(2, blogType.getName());
-			rs = pstmt.executeQuery();
-			if (rs.next()){
-				result = rs.getInt(1);
-			}
+			conditions.add(blogType.getUserId());
+			conditions.add(blogType.getName());
+			result = JdbcUtil.getResultCount(conn, sql, conditions);
 		} catch (Exception e){
 			result = -1;
 			e.printStackTrace();
-		} finally {
-			JdbcUtil.close(conn, pstmt, rs);
 		}
 		
 		return result > 0;
+	}
+
+	//分頁查詢博客數據
+	public List<Blog> getBlogList(PageBean pageBean) {
+		Connection conn = this.getConnection();
+		String sqlCount = "select count(*) from blog";
+		String sql = "select * from blog limit ?,?";
+		//獲取 總條數 
+		int total = JdbcUtil.getResultCount(conn, sqlCount, null);
+		pageBean.setTotalCount(total);
+		List<Object> conditions = new ArrayList<Object>();
+		conditions.add(pageBean.getStart());
+		conditions.add(pageBean.getPageSize());
+		List<Blog> blogs = this.getResultSetByCondition(this.getConnection(), sql, conditions);
+		if (blogs.size() == 0){
+			pageBean.setPage(1);
+		}
+		System.out.println("blogs size : " + blogs.size());
+		return blogs;
 	}
 	
 }
